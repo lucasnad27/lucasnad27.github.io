@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="author" content="Lucas Culbertson"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="/css/reveal.css"/>
+
+<link rel="stylesheet" href="/css/theme/black.css" id="theme"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+<section id="slide-0-0-1">
+<h2 id="0-0-1"><span class="section-number-2">1</span> cluster management</h2>
+<div class="outline-text-2" id="text-0-0-1">
+</div>
+</section>
+<section id="slide-0-0-1-1">
+<h3 id="0-0-1-1"><span class="section-number-3">1.1</span> interactive cluster (always on)</h3>
+<div class="outline-text-3" id="text-0-0-1-1">
+</div>
+</section>
+<section id="slide-0-0-1-1-1">
+<h4 id="0-0-1-1-1"><span class="section-number-4">1.1.1</span> advantages</h4>
+<div class="outline-text-4" id="text-0-0-1-1-1">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-1-1-1"></a>zero latency<br /></li>
+<li><a id="0-0-1-1-1-2"></a>simple!<br /></li>
+<li><a id="0-0-1-1-1-3"></a>the primary disadvantage can be <a href="https://docs.databricks.com/clusters/configure.html#how-autoscaling-behaves">minimized with autoscaling</a><br />
+<ol class="org-ol">
+<li><a id="0-0-1-1-1-3-1"></a>optimized autoscaling<br />
+<ul>
+<li>Scales up from min to max in 2 steps.</li>
+<li>Can scale down even if the cluster is not idle by looking at shuffle file state.</li>
+<li>Scales down based on a percentage of current nodes.</li>
+<li>On automated clusters, scales down if the cluster is underutilized over the last 40 seconds.</li>
+<li>On interactive clusters, scales down if the cluster is underutilized over the last 150 seconds.</li>
+
+</ul>
+</li>
+<li><a id="0-0-1-1-1-3-2"></a>standard autoscaling<br />
+<ul>
+<li>Starts with adding 4 nodes. Thereafter, scales up exponentially, but can take many steps to reach the max.</li>
+<li>Scales down only when the cluster is completely idle and it has been underutilized for the last 10 minutes.</li>
+<li>Scales down exponentially, starting with 1 node.</li>
+
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="slide-0-0-1-1-2">
+<h4 id="0-0-1-1-2"><span class="section-number-4">1.1.2</span> disadvantages</h4>
+<div class="outline-text-4" id="text-0-0-1-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-1-2-1"></a>potential for unused resources when we aren't running counts<br /></li>
+<li><a id="0-0-1-1-2-2"></a>cost of always having a driver running, even with autoscaling<br /></li>
+</ol>
+</section>
+<section id="slide-0-0-1-2">
+<h3 id="0-0-1-2"><span class="section-number-3">1.2</span> on demand (cluster configuration linked to a job type)</h3>
+<div class="outline-text-3" id="text-0-0-1-2">
+</div>
+</section>
+<section id="slide-0-0-1-2-1">
+<h4 id="0-0-1-2-1"><span class="section-number-4">1.2.1</span> advantages</h4>
+<div class="outline-text-4" id="text-0-0-1-2-1">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-2-1-1"></a>could create custom setups for different types of customers<br />
+<ol class="org-ol">
+<li><a id="0-0-1-2-1-1-1"></a>e.g., LA runs a giant cluster while Mill Valley runs on a tiny cluster<br /></li>
+</ol>
+</li>
+<li><a id="0-0-1-2-1-2"></a>only pay for AWS &amp; DBUs while we are running jobs<br /></li>
+<li><a id="0-0-1-2-1-3"></a>simple!<br /></li>
+</ol>
+</section>
+<section id="slide-0-0-1-2-2">
+<h4 id="0-0-1-2-2"><span class="section-number-4">1.2.2</span> disadvantages</h4>
+<div class="outline-text-4" id="text-0-0-1-2-2">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-2-2-1"></a>latency of 2-5 minutes<br /></li>
+</ol>
+</section>
+<section id="slide-0-0-1-3">
+<h3 id="0-0-1-3"><span class="section-number-3">1.3</span> pool cluster (cluster pulls from a set of always-on AWS resources)</h3>
+<div class="outline-text-3" id="text-0-0-1-3">
+</div>
+</section>
+<section id="slide-0-0-1-3-1">
+<h4 id="0-0-1-3-1"><span class="section-number-4">1.3.1</span> advanatages</h4>
+<div class="outline-text-4" id="text-0-0-1-3-1">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-3-1-1"></a>great if we start to diversify our use of databricks (e.g., for more machine learning models, business analysis, etc.,<br /></li>
+<li><a id="0-0-1-3-1-2"></a>no DBUs charged (databricks pricing)<br /></li>
+<li><a id="0-0-1-3-1-3"></a>no latency!<br /></li>
+</ol>
+</section>
+<section id="slide-0-0-1-3-2">
+<h4 id="0-0-1-3-2"><span class="section-number-4">1.3.2</span> disadvantages</h4>
+<div class="outline-text-4" id="text-0-0-1-3-2">
+</div>
+<ol class="org-ol">
+<li><a id="0-0-1-3-2-1"></a>we are still charged for AWS usage, which is the bulk of our cost for these kinds of jobs<br /></li>
+<li><a id="0-0-1-3-2-2"></a>since this is our first usage of databricks, we aren't able to fully utilize pooling functionality<br /></li>
+</ol>
+</section>
+<section id="slide-0-0-1-4">
+<h3 id="0-0-1-4"><span class="section-number-3">1.4</span> hybrid</h3>
+<div class="outline-text-3" id="text-0-0-1-4">
+</div>
+</section>
+<section id="slide-0-0-1-4-1">
+<h4 id="0-0-1-4-1"><span class="section-number-4">1.4.1</span> we could use a combination of all three based on the geoid</h4>
+</section>
+<section id="slide-0-0-1-4-2">
+<h4 id="0-0-1-4-2"><span class="section-number-4">1.4.2</span> e.g., LA runs a giant cluster while Mill Valley runs on our small interactive cluster</h4>
+</section>
+</section>
+</div>
+</div>
+<script src="/lib/js/head.min.js"></script>
+<script src="/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'convex', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: '/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: '/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: '/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>
