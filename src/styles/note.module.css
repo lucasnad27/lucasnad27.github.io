@@ -1,4 +1,4 @@
-.post {
+.note {
   width: 100%;
   max-width: 800px;
   text-align: left;
@@ -61,6 +61,6 @@
   font-size: 1rem;
 }
 
-.postContent {
+.noteContent {
   position: relative;
 }

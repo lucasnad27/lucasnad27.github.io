@@ -5,9 +5,9 @@ import Img from 'gatsby-image'
 import Navigation from './navigation'
 import { toKebabCase } from '../helpers'
 
-import style from '../styles/post.module.css'
+import style from '../styles/note.module.css'
 
-const Post = ({
+const Note = ({
   title,
   date,
   path,
@@ -16,17 +16,17 @@ const Post = ({
   excerpt,
   tags,
   html,
-  previousPost,
-  nextPost,
+  previousNote,
+  nextNote,
 }) => {
-  const previousPath = previousPost && previousPost.frontmatter.path
-  const previousLabel = previousPost && previousPost.frontmatter.title
-  const nextPath = nextPost && nextPost.frontmatter.path
-  const nextLabel = nextPost && nextPost.frontmatter.title
+  const previousPath = previousNote && previousNote.frontmatter.path
+  const previousLabel = previousNote && previousNote.frontmatter.title
+  const nextPath = previousNote && nextNote.frontmatter.path
+  const nextLabel = nextNote && nextNote.frontmatter.title
 
   return (
-    <div className={style.post}>
-      <div className={style.postContent}>
+    <div className={style.note}>
+      <div className={style.noteContent}>
         <h1 className={style.title}>
           {excerpt ? <Link to={path}>{title}</Link> : title}
         </h1>
@@ -73,7 +73,7 @@ const Post = ({
   )
 }
 
-Post.propTypes = {
+Note.propTypes = {
   title: PropTypes.string,
   date: PropTypes.string,
   path: PropTypes.string,
@@ -82,8 +82,8 @@ Post.propTypes = {
   excerpt: PropTypes.string,
   html: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.string),
-  previousPost: PropTypes.object,
-  nextPost: PropTypes.object,
+  previousNote: PropTypes.object,
+  nextNote: PropTypes.object,
 }
 
-export default Post
+export default Note

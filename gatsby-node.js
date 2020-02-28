@@ -33,7 +33,7 @@ exports.createPages = ({ actions, graphql, getNodes }) => {
       }
       site {
         siteMetadata {
-          postsPerPage
+          notesPerPage
         }
       }
     }
@@ -54,22 +54,22 @@ exports.createPages = ({ actions, graphql, getNodes }) => {
       return (typeA > typeB) - (typeA < typeB)
     })
 
-    const posts = allNodes.filter(
+    const notes = allNodes.filter(
       ({ internal, fileAbsolutePath }) =>
         internal.type === 'MarkdownRemark' &&
-        fileAbsolutePath.indexOf('/posts/') !== -1,
+        fileAbsolutePath.indexOf('/notes/') !== -1,
     )
 
-    // Create posts index with pagination
+    // Create notes index with pagination
     paginate({
       createPage,
-      items: posts,
+      items: notes,
       component: indexTemplate,
-      itemsPerPage: siteMetadata.postsPerPage,
+      itemsPerPage: siteMetadata.notesPerPage,
       pathPrefix: '/',
     })
 
-    // Create each markdown page and post
+    // Create each markdown page and note
     forEach(({ node }, index) => {
       const previous = index === 0 ? null : sortedPages[index - 1].node
       const next =
@@ -92,20 +92,20 @@ exports.createPages = ({ actions, graphql, getNodes }) => {
     // Create tag pages
     const tags = filter(
       tag => not(isNil(tag)),
-      uniq(flatMap(post => post.frontmatter.tags, posts)),
+      uniq(flatMap(note => note.frontmatter.tags, notes)),
     )
 
     forEach(tag => {
-      const postsWithTag = posts.filter(
-        post =>
-          post.frontmatter.tags && post.frontmatter.tags.indexOf(tag) !== -1,
+      const notesWithTag = notes.filter(
+        note =>
+          note.frontmatter.tags && note.frontmatter.tags.indexOf(tag) !== -1,
       )
 
       paginate({
         createPage,
-        items: postsWithTag,
+        items: notesWithTag,
         component: tagsTemplate,
-        itemsPerPage: siteMetadata.postsPerPage,
+        itemsPerPage: siteMetadata.notesPerPage,
         pathPrefix: `/tag/${toKebabCase(tag)}`,
         context: {
           tag,

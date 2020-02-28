@@ -17,7 +17,7 @@ module.exports = {
     },
     logoText: 'hello world',
     defaultTheme: 'dark',
-    postsPerPage: 5,
+    notesPerPage: 5,
     showMenuItems: 2,
     menuMoreText: 'Show more',
     mainMenu: [
@@ -46,13 +46,6 @@ module.exports = {
       options: {
         name: `notes`,
         path: `${__dirname}/src/notes`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `pages`,
-        path: `${__dirname}/src/pages`,
       },
     },
     {

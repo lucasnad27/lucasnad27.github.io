@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { graphql } from 'gatsby'
 import SEO from '../components/seo'
 import Layout from '../components/layout'
-import Post from '../components/post'
+import Note from '../components/Note'
 import Navigation from '../components/navigation'
 
 import '../styles/layout.css'
@@ -13,7 +13,7 @@ const Tags = ({
   pageContext: { nextPagePath, previousPagePath, tag },
 }) => {
   const {
-    allMarkdownRemark: { edges: posts },
+    allMarkdownRemark: { edges: notes },
   } = data
 
   return (
@@ -21,10 +21,10 @@ const Tags = ({
       <SEO />
       <Layout>
         <div className="infoBanner">
-          Posts with tag: <span>#{tag}</span>
+          Notes with tag: <span>#{tag}</span>
         </div>
 
-        {posts.map(({ node }) => {
+        {notes.map(({ node }) => {
           const {
             id,
             excerpt: autoExcerpt,
@@ -40,7 +40,7 @@ const Tags = ({
           } = node
 
           return (
-            <Post
+            <Note
               key={id}
               title={title}
               date={date}
@@ -55,9 +55,9 @@ const Tags = ({
 
         <Navigation
           previousPath={previousPagePath}
-          previousLabel="Newer posts"
+          previousLabel="Newer notes"
           nextPath={nextPagePath}
-          nextLabel="Older posts"
+          nextLabel="Older notes"
         />
       </Layout>
     </>
@@ -72,7 +72,7 @@ Tags.propTypes = {
   }),
 }
 
-export const postsQuery = graphql`
+export const notesQuery = graphql`
   query($limit: Int!, $skip: Int!, $tag: String!) {
     allMarkdownRemark(
       filter: { frontmatter: { tags: { in: [$tag] } } }

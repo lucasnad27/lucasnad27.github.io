@@ -3,19 +3,19 @@ import PropTypes from 'prop-types'
 import { graphql } from 'gatsby'
 import SEO from '../components/seo'
 import Layout from '../components/layout'
-import Post from '../components/post'
+import Note from '../components/note'
 import Navigation from '../components/navigation'
 
 const Index = ({ data, pageContext: { nextPagePath, previousPagePath } }) => {
   const {
-    allMarkdownRemark: { edges: posts },
+    allMarkdownRemark: { edges: notes },
   } = data
 
   return (
     <>
       <SEO />
       <Layout>
-        {posts.map(({ node }) => {
+        {notes.map(({ node }) => {
           const {
             id,
             excerpt: autoExcerpt,
@@ -31,7 +31,7 @@ const Index = ({ data, pageContext: { nextPagePath, previousPagePath } }) => {
           } = node
 
           return (
-            <Post
+            <Note
               key={id}
               title={title}
               date={date}
@@ -46,9 +46,9 @@ const Index = ({ data, pageContext: { nextPagePath, previousPagePath } }) => {
 
         <Navigation
           previousPath={previousPagePath}
-          previousLabel="Newer posts"
+          previousLabel="Newer notes"
           nextPath={nextPagePath}
-          nextLabel="Older posts"
+          nextLabel="Older notes"
         />
       </Layout>
     </>
@@ -63,10 +63,10 @@ Index.propTypes = {
   }),
 }
 
-export const postsQuery = graphql`
+export const notesQuery = graphql`
   query($limit: Int!, $skip: Int!) {
     allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "//posts//" } }
+      filter: { fileAbsolutePath: { regex: "//notes//" } }
       sort: { fields: [frontmatter___date], order: DESC }
       limit: $limit
       skip: $skip
